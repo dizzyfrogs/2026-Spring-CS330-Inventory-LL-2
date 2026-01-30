@@ -27,9 +27,7 @@ public class Inventory
      */
     public static void mergeStacks(ItemStack lhs, ItemStack rhs)
     {
-        // lhs needs to have items added to it.
-        // rhs's size is needed
-        // lhs.????(rhs.????)
+        lhs.addItems(rhs.size());
     }
 
     /**
@@ -93,8 +91,7 @@ public class Inventory
      */
     public boolean isFull()
     {
-        // Replace the next line
-        return false;
+        return this.slots.currentSize == this.capacity;
     }
 
     /**
@@ -117,8 +114,15 @@ public class Inventory
      */
     public ItemStack findMatchingItemStack(ItemStack key)
     {
-        // Add the necessary sequential search loop
+        LinkedList.Node<ItemStack> curr = this.slots.head;
 
+        while (curr != null) {
+            if (curr.data.equals(key)) {
+                return curr.data;
+            } else {
+                curr = curr.next;
+            }
+        }
         return null;
     }
 
@@ -131,8 +135,18 @@ public class Inventory
     {
         LinkedList.Node<ItemStack> newNode = new LinkedList.Node<>(toAdd);
 
-        // Use the appendNode/add logic from Review 1 as your starting point
-        // Once we reach this function... we know that `toAdd` must be stored
+        // head and tail pointers are null, so list is empty
+        if (this.slots.head == null) {
+            this.slots.head = newNode;
+            this.slots.tail = newNode;
+        } else {
+            // not empty, so new node is the new tail
+            this.slots.tail.next = newNode;
+            this.slots.tail = newNode;
+        }
+
+        // update size
+        this.slots.currentSize++;
     }
 
     /**
